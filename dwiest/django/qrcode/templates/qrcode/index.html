@@ -1,0 +1,62 @@
+<Html>
+
+<Head>
+  <Title>{{page_name}}</Title>
+  <Style>
+.container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  }
+.error-text{
+  color: #ffffff;
+  background-color: #ff0000
+  }
+  </Style>
+  </Head>
+
+<Body>
+
+{% block header %}
+{% with title=page_name %}
+{% include 'header.html' %}
+{% endwith %}
+{% endblock %}
+
+<Div align="center">
+{% if form.non_field_errors %}
+<P>
+{% for error in form.non_field_errors %}
+{{error}}<BR/>
+{% endfor %}
+{% endif %}
+
+{% if form.errors %}
+<P>
+{% for field in form %}
+  {% for error in field.errors %}
+<Div class="error-text">
+{{error}}<BR/>
+</Div>
+  {% endfor %}
+{% endfor %}
+{% endif %}
+
+{% if qrcode %}
+<P>
+<Img src="data:image/png;base64,{{qrcode}}"/>
+{% endif %}
+<P>
+<Form method="post" action="{% url 'qrcode' %}">
+{% csrf_token %}
+  <Label for="input_text">Text:</Label>
+  {{form.input_text}}
+  <Input type="submit" name="submit" value="Generate QR Code"></Input>
+</Form>
+
+</Div>
+
+{% include "footer.html" %}
+</Body>
+</Html>
